@@ -1,17 +1,30 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 import WeatherExtraInfo from './WeatherExtraInfo';
 import WeaterTemperature from './WeatherTemperature';
-import {CLOUD,CLOUDY,SUN,RAIN,SNOW,WINDY} from './../../../constants/weathers'
 import './styles.css';
 
 
-const WeatherData = ()=>(
 
-    <div className="WeatherDataCont">
-         <WeaterTemperature temperature={20} weatherState={SUN}></WeaterTemperature>
-        <WeatherExtraInfo humidity={"80"} wind={'10 m s'}></WeatherExtraInfo>
+const WeatherData = ({data:{temperature,weatherState,humidity,wind}})=>{
+
+    // const {temperature,weatherState,humidity,wind} = data; 2 forma de hacer destruturing
+
+    return (<div className="WeatherDataCont">
+         <WeaterTemperature temperature={temperature} weatherState={weatherState}
+         />
+        <WeatherExtraInfo humidity={humidity} wind={wind}></WeatherExtraInfo>
        
-    </div>
-)
+    </div>)
+}
+
+WeatherData.PropTypes ={
+    data:PropTypes.shape({
+        temperature:PropTypes.number.isRequired,
+        weatherState:PropTypes.string.isRequired,
+        humidity:PropTypes.number.isRequired,
+        wind:PropTypes.string.isRequired,
+    })
+}
 
 export default WeatherData;
