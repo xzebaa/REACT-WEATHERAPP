@@ -1,74 +1,54 @@
 import React, {Component} from 'react';
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Location from './Location';
 import WeatherData from './WeatherData';
 import './styles.css'
-import { SUN, WINDY } from '../../constants/weathers';
+import transformWeather from './../../services/transformWeather'
+import geturlWeatherByCity from './../../services/getUrlWeatherByCity'
 
-const location ='Santiago ,cl';
-const api_key='f0209ba6ed7e97653b9a3ffcb73f019c';
-const url_base_weather='https://api.openweathermap.org/data/2.5/weather'
-const api_weather = `${url_base_weather}?q=${location}&appid=${api_key}`;
-
-
-const dataWeather = {
-    temperature : 20,
-    weatherState: SUN,
-    humidity: 3,
-    wind :'10 m/s'
-};
-
-const dataWeather2 = {
-    temperature : 17,
-    weatherState: WINDY,
-    humidity: 30,
-    wind :'15 m/s'
-};
 
 class WeahterLocation extends Component{
 
-    constructor(){
-        super();
-
+    constructor(props){
+        super(props);
+        const {city} = props; 
         this.state={
-            city:'Santiago, Chile',
-            data:dataWeather
+            city,
+            data:null
         }
+        console.log('constructor');
     }
 
-    getData = (weather_data) => {
-        const {humidity, temp} = weather_data;
-        const {speed} =weather_data.wind;
-        const weatherState =SUN;
+    componentDidMount(){
+        console.log(' componentDidMount');
+        this.handlerpdUateClick();
+    }
 
-        const data = {
-            humidity,
-            temperature:temp,
-            weatherState,
-            wind : `${speed} m/s`
+    componentDidUpdate(){
+        console.log(' componentDidUpdate');
+    }
+
+    handlerpdUateClick =()=>{
+        const api_weather= geturlWeatherByCity(this.state.city)
+        fetch(api_weather).then(resolve =>{
+            return resolve.json()
+        }).then( data=>{
+           
+            const newWeather= transformWeather(data);
+            this.setState({
+                data: newWeather
+            });
         }
-
-    };
-
-    handlerUpdateClick =()=>{
-
-        let cbOk = (response) => {
-            console.log(response.json())
-        }
-        fetch(api_weather).then(cbOk);
-
-        console.log(`actualizado`);
-        this.setState({
-            data: dataWeather2
-        });
+        );
     }
 
     render(){
+        console.log('RENDER');
         const { city ,data} = this.state;
         return (
             <div className="weatherLocationCont">
         <Location city={city}></Location>
-        <WeatherData data={data}></WeatherData>
-        <button onClick={this.handlerUpdateClick} >actualizar</button>
+        {data ? <WeatherData data={data}></WeatherData> : <CircularProgress />}
     </div>
         );
     };

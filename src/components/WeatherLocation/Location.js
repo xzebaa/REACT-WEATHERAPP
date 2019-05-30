@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+//import PropTypes from 'prop-types';
 import './styles.css'
 const Location = (props)=>{
 
-    console.log(props);
-    debugger;
+    //console.log(props);
 
     //destrusturing
 
@@ -20,7 +19,7 @@ const Location = (props)=>{
 
 }
 
-Location.PropTypes={
-    city:PropTypes.string.isRequired,
-}
+// Location.PropTypes={
+//     city:PropTypes.string.isRequired,
+// }
 export default Location;
